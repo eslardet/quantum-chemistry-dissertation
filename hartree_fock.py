@@ -1,4 +1,3 @@
-from operator import mul
 import numpy as np
 from scipy.special import erf
 
@@ -155,7 +154,6 @@ def G_calc(B, P, multi_elec_tensor):
 def scf(molecule, alpha, D, threshold=10**-4, max_it=250):
     # Integral calculations 
     B, S, H_core, multi_elec_tensor = integral_calc(molecule, alpha, D)
-    print(H_core)
     STOnG = D.shape[1]
 
     X = sym_orth(S) # orthogonalization
@@ -200,7 +198,7 @@ def scf(molecule, alpha, D, threshold=10**-4, max_it=250):
             print(f'Current orbital matrix is: \n\n{C}')
             return 
 
-    print('STO{}G Restricted Closed Shell HF algorithm took {} iterations to converge \n'.format(STOnG, it))
+    print('STO{}G Restricted Closed Shell HF algorithm for {} took {} iterations to converge \n'.format(STOnG, molecule['name'], it))
     print('The orbital energies are are {} Hartrees'.format(eval_F_prime))
     print(f'The orbital matrix is: \n\n{C} \n')
     print(f'The density/bond order matrix is: \n\n{P}')
@@ -220,8 +218,10 @@ D = np.array([[0.444635, 0.535328, 0.154329],
 
 
 ## Molecule information ##
-HeHplus = {'N_elecs': 2, 'N_atoms':2, 'atoms': ['He', 'H'], 'coordinates': np.array([[0,0,0], [0,0,1.4632]], dtype=float)}
-H = {'N_elecs': 1, 'N_atoms':1, 'atoms': ['H'], 'coordinates': np.array([[0,0,0]], dtype=float)}
+HeHplus = {'name': 'HeH+','N_elecs': 2, 'N_atoms':2, 'atoms': ['He', 'H'], 'coordinates': np.array([[0,0,0], [0,0,1.4632]], dtype=float)}
+H = {'name': 'H', 'N_elecs': 1, 'N_atoms':1, 'atoms': ['H'], 'coordinates': np.array([[0,0,0]], dtype=float)}
+He = {'name': 'He', 'N_elecs': 2, 'N_atoms':1, 'atoms': ['He'], 'coordinates': np.array([[0,0,0]], dtype=float)}
+Li = {'name': 'Li', 'N_elecs': 3, 'N_atoms':1, 'atoms': ['Li'], 'coordinates': np.array([[0,0,0]], dtype=float)}
 
 ### Perform SCF algorithm ###
-scf(molecule=HeHplus, alpha=alpha, D=D)
+scf(molecule=He, alpha=alpha, D=D)
