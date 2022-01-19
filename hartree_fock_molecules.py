@@ -57,8 +57,8 @@ def multi(A,B,C,D):
 
 # Computation of all integrals
 def integral_calc(molecule, alpha, D):
-    zeta_dict = {'H':[1.24], 'He':[2.0925], 'Li':[2.69,0.80], 'Be':[3.68,1.15], 'B':[4.68,1.50], 'C':[5.67,1.72]}
-    max_quantum_number = {'H':1, 'He':1, 'Li':2, 'Be':2, 'C':2}
+    zeta_dict = {'H':[1.24], 'He':[2.0925], 'Li':[2.69,0.80], 'Be':[3.68,1.15], 'B':[4.68,1.50], 'C':[5.67,1.72], 'N':[6.67, 1.95], 'O':[7.66, 2.25], 'F':[8.65, 2.55]}
+    max_quantum_number = {'H':1, 'He':1, 'Li':2, 'Be':2, 'C':2, 'N':2, 'O':2, 'F':2, 'Ne':2}
     # Basis set size
     B = 0
     for atom in molecule['atoms']:
@@ -127,7 +127,7 @@ def integral_calc(molecule, alpha, D):
                                                     multi_elec_tensor[a,b,c,d] += d_vec_m[p]*d_vec_n[q]*d_vec_k[r]*d_vec_l[s]*(
                                                     multi((alpha_vec_m[p],Ra), (alpha_vec_n[q],Rb),
                                                         (alpha_vec_k[r],Rc), (alpha_vec_l[s],Rd)))                                                   
-    # Form H_core                                                
+    # Form H_core
     H_core = T + V
 
     return B, S, H_core, multi_elec_tensor
@@ -150,8 +150,21 @@ def G_calc(B, P, multi_elec_tensor):
                     G[i,j] += P[k,l]*(multi_elec_tensor[i,j,k,l]-0.5*multi_elec_tensor[i,k,l,j])
     return G
 
+def nuclear_energy(molecule):
+    energy = 0
+    charge_dict = {'H':1, 'He':2, 'Li':3, 'Be':4, 'C':5, 'N':6, 'O':8, 'F':9, 'Ne':10}
+    for idx_a in range(molecule['N_atoms']):
+        atom_a = molecule['atoms'][idx_a]
+        coord_a = molecule['coordinates'][idx_a]
+        for idx_b in range(idx_a+1, molecule['N_atoms']):
+            atom_b = molecule['atoms'][idx_b]
+            coord_b = molecule['coordinates'][idx_b]
+            R_ab = np.linalg.norm(coord_a-coord_b)
+            energy += charge_dict[atom_a]*charge_dict[atom_b] / R_ab
+    return energy
+
 ### Main SCF Algorithm ###
-def scf(molecule, alpha, D, threshold=10**-4, max_it=250):
+def scf(molecule, alpha, D, threshold=10**-5, max_it=250):
     # Integral calculations 
     B, S, H_core, multi_elec_tensor = integral_calc(molecule, alpha, D)
     STOnG = D.shape[1]
@@ -169,6 +182,9 @@ def scf(molecule, alpha, D, threshold=10**-4, max_it=250):
         # Calculate Fock matrix with guess P
         G = G_calc(B, P, multi_elec_tensor)
         F = H_core + G # Fock matrix
+
+        # elec_energy = np.trace(1/2 * (P@(H_core+F))) ## Electronic energy S&O p.176
+        # print('Total electronic energy: {} \n'.format(elec_energy))
 
         # Calculate Fock matrix in orthogonalized basis
         F_prime = X.T@F@X
@@ -198,15 +214,24 @@ def scf(molecule, alpha, D, threshold=10**-4, max_it=250):
             print(f'Current orbital matrix is: \n\n{C}')
             return 
 
-    print('STO{}G Restricted Closed Shell HF algorithm for {} took {} iterations to converge \n'.format(STOnG, molecule['name'], it))
-    print('The orbital energies are are {} Hartrees'.format(eval_F_prime))
-    print(f'The orbital matrix is: \n\n{C} \n')
-    print(f'The density/bond order matrix is: \n\n{P}')
 
-    return eval_F_prime, C, P
+    print('STO{}G Restricted Closed Shell HF algorithm for {} took {} iterations to converge \n'.format(STOnG, molecule['name'], it))
+    # print('The orbital energies are are {} Hartrees'.format(eval_F_prime))
+    # print('The diagonal values of H core are: {}'.format(np.diag(H_core)))
+    # print(f'The orbital matrix is: \n\n{C} \n')
+    # print(f'The density/bond order matrix is: \n\n{P}\n')
+
+    elec_energy = np.trace(1/2 * (P@(H_core+F))) ## Electronic energy S&O p.176
+    print('Total electronic energy: {} \n'.format(elec_energy))
+
+    total_energy = elec_energy + nuclear_energy(molecule)
+    print('Total energy: {} \n'.format(total_energy))
+
+    # return H_core, eval_F_prime, C, P, elec_energy
 
 ## Basis set variables for STO3G ##
 # Coefficient values from Hehre et al., 1969
+# Also from SO p.185
 
 # Gaussian orbital exponents 
 alpha = np.array([[0.109818, 0.405771, 2.22766],
@@ -219,9 +244,11 @@ D = np.array([[0.444635, 0.535328, 0.154329],
 
 ## Molecule information ##
 HeHplus = {'name': 'HeH+','N_elecs': 2, 'N_atoms':2, 'atoms': ['He', 'H'], 'coordinates': np.array([[0,0,0], [0,0,1.4632]], dtype=float)}
-H = {'name': 'H', 'N_elecs': 1, 'N_atoms':1, 'atoms': ['H'], 'coordinates': np.array([[0,0,0]], dtype=float)}
-He = {'name': 'He', 'N_elecs': 2, 'N_atoms':1, 'atoms': ['He'], 'coordinates': np.array([[0,0,0]], dtype=float)}
-Li = {'name': 'Li', 'N_elecs': 3, 'N_atoms':1, 'atoms': ['Li'], 'coordinates': np.array([[0,0,0]], dtype=float)}
+# H = {'name': 'H', 'N_elecs': 1, 'N_atoms':1, 'atoms': ['H'], 'coordinates': np.array([[0,0,0]], dtype=float)}
+# He = {'name': 'He', 'N_elecs': 2, 'N_atoms':1, 'atoms': ['He'], 'coordinates': np.array([[0,0,0]], dtype=float)}
+# Li = {'name': 'Li', 'N_elecs': 3, 'N_atoms':1, 'atoms': ['Li'], 'coordinates': np.array([[0,0,0]], dtype=float)}
+# Be = {'name': 'Be', 'N_elecs': 4, 'N_atoms':1, 'atoms': ['Be'], 'coordinates': np.array([[0,0,0]], dtype=float)}
+H2 = {'name': 'H2','N_elecs': 2, 'N_atoms':2, 'atoms': ['H', 'H'], 'coordinates': np.array([[0,0,0], [0,0,1.4]], dtype=float)}
 
 ### Perform SCF algorithm ###
-scf(molecule=He, alpha=alpha, D=D)
+scf(molecule=H2, alpha=alpha, D=D)
