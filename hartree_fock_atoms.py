@@ -40,7 +40,7 @@ def F0(t):
     
 # Nuclear attraction integral (p414)
 def potential(A, B, molecule, atom_idx):
-    charge_dict = {'H':1, 'He':2, 'Li':3, 'Be':4, 'C':5, 'N':6, 'O':8, 'F':9, 'Ne':10}
+    charge_dict = {'H':1, 'He':2, 'Li':3, 'Be':4}
     p, diff, K, Rp = gauss_product(A, B)
     Rc = molecule['coordinates'][atom_idx] # position of atom C
     Zc = charge_dict[molecule['atoms'][atom_idx]] # charge of atom C
@@ -57,8 +57,9 @@ def multi(A,B,C,D):
 
 # Computation of all integrals
 def integral_calc(molecule, alpha, D):
-    zeta_dict = {'H':[1.24], 'He':[1.45,2.91], 'Li':[2.69,0.80], 'Be':[3.68,1.15], 'B':[4.68,1.50], 'C':[5.67,1.72], 'N':[6.67, 1.95], 'O':[7.66, 2.25], 'F':[8.65, 2.55]}
-    max_quantum_number = {'H':1, 'He':1, 'Li':2, 'Be':2, 'C':2, 'N':2, 'O':2, 'F':2, 'Ne':2}
+    # zeta values from Hehre, 1970
+    zeta_dict = {'H':[1.24], 'He':[1.69], 'Li':[2.69,0.80], 'Be':[3.68,1.15]}
+    max_quantum_number = {'H':1, 'He':1, 'Li':2, 'Be':2}
     # Basis set size
     B = 0
     for atom in molecule['atoms']:
@@ -219,20 +220,36 @@ def scf(molecule, alpha, D, threshold=10**-6, max_it=250):
 # Coefficient values from Hehre et al., 1969
 # Also from SO p.185
 
-# Gaussian orbital exponents 
-alpha = np.array([[0.109818, 0.405771, 2.22766],
-                [0.0751386, 0.231031, 0.994203]])
+# # Gaussian orbital exponents
+# alpha = np.array([[0.109818, 0.405771, 2.22766],  #1s
+#                 [0.0751386, 0.231031, 0.994203]]) #2sp
+
+
+# # Gaussian contraction coeffs
+# D = np.array([[0.444635, 0.535328, 0.154329],  #1s
+#              [0.700115, 0.399513, -0.0999672], #2s
+#              [0.391957, 0.607684, 1.55916]])   #2p
+
+## Basis set variables for STO3G ##
+# Coefficient values from Stewart, 1970
+
+# Gaussian orbital exponents
+alpha = np.array([[2.227660584, 0.405771562, 0.1098175104],  #1s
+                    [2.581578398, 0.1567622104, 0.06018332272]])   #2s
+
 
 # Gaussian contraction coeffs
-D = np.array([[0.444635, 0.535328, 0.154329],
-             [0.700115, 0.399513, -0.0999672]])
+D = np.array([[0.1543289673, 0.5353281423, 0.4446345422],   #1s
+                [-0.05994474934, 0.5960385398, 0.451786291]])   #2s
 
 
 ## Molecule information ##
-H = {'N_elecs': 1, 'atom': ['H']}
-He = {'N_elecs': 2, 'atom': ['He'], 'zeta':[1.45,2.91]}
-Li = {'N_elecs': 3, 'atom': ['Li']}
-Be = {'N_elecs': 4, 'atom': ['Be']}
+# HeHplus = {'name': 'HeH+','N_elecs': 2, 'N_atoms':2, 'atoms': ['He', 'H'], 'coordinates': np.array([[0,0,0], [0,0,1.4632]], dtype=float)}
+H = {'name': 'H', 'N_elecs': 1, 'N_atoms':1, 'atoms': ['H'], 'coordinates': np.array([[0,0,0]], dtype=float)}
+He = {'name': 'He', 'N_elecs': 2, 'N_atoms':1, 'atoms': ['He'], 'coordinates': np.array([[0,0,0]], dtype=float)}
+Li = {'name': 'Li', 'N_elecs': 3, 'N_atoms':1, 'atoms': ['Li'], 'coordinates': np.array([[0,0,0]], dtype=float)}
+Be = {'name': 'Be', 'N_elecs': 4, 'N_atoms':1, 'atoms': ['Be'], 'coordinates': np.array([[0,0,0]], dtype=float)}
+# H2 = {'name': 'H2','N_elecs': 2, 'N_atoms':2, 'atoms': ['H', 'H'], 'coordinates': np.array([[0,0,0], [0,0,1.4]], dtype=float)}
 
 ### Perform SCF algorithm ###
-scf(molecule='He', alpha=alpha, D=D)
+scf(molecule=Be, alpha=alpha, D=D)

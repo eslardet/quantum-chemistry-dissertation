@@ -57,8 +57,8 @@ def multi(A,B,C,D):
 
 # Computation of all integrals
 def integral_calc(molecule, alpha, D):
-    zeta_dict = {'H':[1.24], 'He':[1.45,2.91], 'Li':[2.69,0.80], 'Be':[3.68,1.15], 'B':[4.68,1.50], 'C':[5.67,1.72], 'N':[6.67, 1.95], 'O':[7.66, 2.25], 'F':[8.65, 2.55]}
-    max_quantum_number = {'H':1, 'He':2, 'Li':2, 'Be':2, 'C':2, 'N':2, 'O':2, 'F':2, 'Ne':2}
+    zeta_dict = {'H':[1.24], 'He':[2.0925], 'Li':[2.69,0.80], 'Be':[3.68,1.15], 'B':[4.68,1.50], 'C':[5.67,1.72], 'N':[6.67, 1.95], 'O':[7.66, 2.25], 'F':[8.65, 2.55]}
+    max_quantum_number = {'H':1, 'He':1, 'Li':2, 'Be':2, 'C':2, 'N':2, 'O':2, 'F':2, 'Ne':2}
     # Basis set size
     B = 0
     for atom in molecule['atoms']:

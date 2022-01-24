@@ -58,7 +58,7 @@ def multi(A,B,C,D):
 # Computation of all integrals
 def integral_calc(molecule, alpha, D):
     zeta_dict = {'H':[1.24], 'He':[2.0925], 'Li':[2.69,0.80], 'Be':[3.68,1.15], 'B':[4.68,1.50], 'C':[5.67,1.72], 'N':[6.67, 1.95], 'O':[7.66, 2.25], 'F':[8.65, 2.55]}
-    max_quantum_number = {'H':1, 'He':1, 'Li':2, 'Be':2, 'C':2, 'N':2, 'O':2, 'F':2, 'Ne':2}
+    max_quantum_number = {'H':1, 'He':1, 'Li':2, 'Be':2}
     # Basis set size
     B = 0
     for atom in molecule['atoms']:
@@ -239,15 +239,11 @@ alpha = np.array([[0.109818, 0.405771, 2.22766],
 
 # Gaussian contraction coeffs
 D = np.array([[0.444635, 0.535328, 0.154329],
-             [0.700115, 0.399513, -0.0999672]])
+             [0.700115, 0.399513, -0.0999672],])
 
 
 ## Molecule information ##
 HeHplus = {'name': 'HeH+','N_elecs': 2, 'N_atoms':2, 'atoms': ['He', 'H'], 'coordinates': np.array([[0,0,0], [0,0,1.4632]], dtype=float)}
-# H = {'name': 'H', 'N_elecs': 1, 'N_atoms':1, 'atoms': ['H'], 'coordinates': np.array([[0,0,0]], dtype=float)}
-# He = {'name': 'He', 'N_elecs': 2, 'N_atoms':1, 'atoms': ['He'], 'coordinates': np.array([[0,0,0]], dtype=float)}
-# Li = {'name': 'Li', 'N_elecs': 3, 'N_atoms':1, 'atoms': ['Li'], 'coordinates': np.array([[0,0,0]], dtype=float)}
-# Be = {'name': 'Be', 'N_elecs': 4, 'N_atoms':1, 'atoms': ['Be'], 'coordinates': np.array([[0,0,0]], dtype=float)}
 H2 = {'name': 'H2','N_elecs': 2, 'N_atoms':2, 'atoms': ['H', 'H'], 'coordinates': np.array([[0,0,0], [0,0,1.4]], dtype=float)}
 
 ### Perform SCF algorithm ###
