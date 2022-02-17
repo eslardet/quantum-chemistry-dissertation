@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.special import erf
 
+### Adapted from [cite] with page references to Szabo & Ostlund ###
 
 ### Integrals between Gaussian orbitals (pp410) ###
 
@@ -153,14 +154,15 @@ def G_calc(B, P, multi_elec_tensor):
 def nuclear_energy(molecule):
     energy = 0
     charge_dict = {'H':1, 'He':2, 'Li':3, 'Be':4, 'C':5, 'N':6, 'O':8, 'F':9, 'Ne':10}
-    for idx_a in range(molecule['N_atoms']):
-        atom_a = molecule['atoms'][idx_a]
-        coord_a = molecule['coordinates'][idx_a]
-        for idx_b in range(idx_a+1, molecule['N_atoms']):
-            atom_b = molecule['atoms'][idx_b]
-            coord_b = molecule['coordinates'][idx_b]
-            R_ab = np.linalg.norm(coord_a-coord_b)
-            energy += charge_dict[atom_a]*charge_dict[atom_b] / R_ab
+    if molecule['N_atoms'] > 1:
+        for idx_a in range(molecule['N_atoms']):
+            atom_a = molecule['atoms'][idx_a]
+            coord_a = molecule['coordinates'][idx_a]
+            for idx_b in range(idx_a+1, molecule['N_atoms']):
+                atom_b = molecule['atoms'][idx_b]
+                coord_b = molecule['coordinates'][idx_b]
+                R_ab = np.linalg.norm(coord_a-coord_b)
+                energy += charge_dict[atom_a]*charge_dict[atom_b] / R_ab
     return energy
 
 ### Main SCF Algorithm ###
