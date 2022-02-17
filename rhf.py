@@ -257,6 +257,8 @@ def scf(molecule, alpha, D, threshold=10**-6, max_it=250):
 
     print('STO{}G Restricted Closed Shell HF algorithm for {} took {} iterations to converge \n'.format(STOnG, molecule['name'], it))
     print(f'The orbital matrix is: \n\n C = {C} \n')
+    print('The orbital energies are are {} Hartrees'.format(eval_F_prime))
+    print('The diagonal values of H core are: {}'.format(np.diag(H_core)))
 
     elec_energy = electronic_energy(P, H_core, F)
     nuc_energy = nuclear_energy(molecule)
@@ -279,14 +281,15 @@ D = np.array([[0.444635, 0.535328, 0.154329],   #1s
 
 
 ### Molecule & atom information ###
+# Works for RHF
 HeHplus = {'name': 'HeH+','N_elecs': 2, 'N_atoms':2, 'atoms': ['He', 'H'], 'coordinates': np.array([[0,0,0], [0,0,1.4632]], dtype=float)}
 H2 = {'name': 'H2','N_elecs': 2, 'N_atoms':2, 'atoms': ['H', 'H'], 'coordinates': np.array([[0,0,0], [0,0,1.4]], dtype=float)}
-
-H = {'name': 'H', 'N_elecs': 1, 'N_atoms':1, 'atoms': ['H'], 'coordinates': np.array([[0,0,0]], dtype=float)}
 He = {'name': 'He', 'N_elecs': 2, 'N_atoms':1, 'atoms': ['He'], 'coordinates': np.array([[0,0,0]], dtype=float)}
+
+# Others to test
+H = {'name': 'H', 'N_elecs': 1, 'N_atoms':1, 'atoms': ['H'], 'coordinates': np.array([[0,0,0]], dtype=float)}
 Li = {'name': 'Li', 'N_elecs': 3, 'N_atoms':1, 'atoms': ['Li'], 'coordinates': np.array([[0,0,0]], dtype=float)}
 Be = {'name': 'Be', 'N_elecs': 4, 'N_atoms':1, 'atoms': ['Be'], 'coordinates': np.array([[0,0,0]], dtype=float)}
 
-
 ### Perform SCF algorithm ###
-scf(molecule=HeHplus, alpha=alpha, D=D)
+scf(molecule=Be, alpha=alpha, D=D)
