@@ -292,4 +292,4 @@ Li = {'name': 'Li', 'N_elecs': 3, 'N_atoms':1, 'atoms': ['Li'], 'coordinates': n
 Be = {'name': 'Be', 'N_elecs': 4, 'N_atoms':1, 'atoms': ['Be'], 'coordinates': np.array([[0,0,0]], dtype=float)}
 
 ### Perform SCF algorithm ###
-scf(molecule=Be, alpha=alpha, D=D)
+scf(molecule=H2, alpha=alpha, D=D)
