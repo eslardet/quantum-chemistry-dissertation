@@ -4,7 +4,7 @@ Code to accompany my disseration on Mathematical Quantum Chemistry.
 
 The `rhf.py` file contains my own implementation of Restricted Hartree-Fock with the STO-3G basis set. This is adapted from https://medium.com/analytics-vidhya/practical-introduction-to-hartree-fock-448fc64c107b, but with a number of improvements and differences to make sure it runs smoothly for atoms as well as simple molecules. This implementation is only completely valid for closed-shell systems up to subshell 2s in the basis. Lithium does not work as it is open-shell, and Beryllium requires the addition of 2p basis orbitals to work.
 
-The `figures.ipynb` is a Jupyter Notebook with code for generating all figures and tables for the Comparision of Methods chapter in my dissertation. This includes:
+The `figures.ipynb` is a Jupyter Notebook with code for generating all figures and tables for the Comparision of Methods chapter in the written report. This includes:
 - Tables of ground state energies for first order PT, variational PT, ROHF with STO-3G and cc-pVQZ basis, and experimental energies
 - Plots to compare first order PT and ROHF (STO-3G) for different $Z$ values
 - Spectral gap plots for Li-F to match up experimental energy level data and the PT model, which should be exact in the large $Z$ limit
