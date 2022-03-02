@@ -9,6 +9,7 @@ The `figures.ipynb` is a Jupyter Notebook with code for generating all figures a
 - Plots to compare first order PT and ROHF (STO-3G) for different $Z$ values
 - Spectral gap plots for Li-F to match up experimental energy level data and the PT model, which should be exact in the large $Z$ limit
 - Wave function densities and their radial probability plots for ROHF and PT model methods, for the first four elements (H, He, Li, Be)
+- Effect of increasing $Z$ on wave functions and their modes
 
 All Hartree-Fock calculations are performed using the Python API module of psi4, an ab initio computational chemistry package (https://psicode.org/).
 Note if you wish to download the Python module psi4 on a Windows computer using conda, there are some errors that can occur upon installatation the normal way (something about DLL load failed), as happened to me. Simple solution for downloading psi4 1.4 into Python 3.8 using conda is to use `conda install psi4 python=3.8 -c psi4 -c conda-forge` within the anaconda comman prompt, with the environoment of choice currently active (see: http://forum.psicode.org/t/how-to-run-psi4-on-windows-10/2174/20).
