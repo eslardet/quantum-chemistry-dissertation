@@ -5,7 +5,6 @@ Adapted from Laksh (2019) with page references to Szabo & Ostlund
 """
 
 # Imports
-from importlib.util import module_for_loader
 import numpy as np
 from scipy.special import erf
 
