@@ -1,6 +1,6 @@
 """ 
 Restricted Hartree-Fock with STO-nG basis set
-Adapted from Laksh (2019) with page references to Szabo & Ostlund 
+Adapted from Laksh (2019) with page references to Szabo & Ostlund (1996)
 
 """
 
